@@ -15,4 +15,5 @@ public class WizardToWizardDtoConverter implements Converter<Wizard, WizardDto> 
                                             source.getNumberOfArtifacts());
         return wizardDto;
     }
+
 }
