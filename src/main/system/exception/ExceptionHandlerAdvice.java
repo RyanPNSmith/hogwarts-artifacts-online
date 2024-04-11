@@ -88,40 +88,6 @@ public class ExceptionHandlerAdvice {
         return new Result(false, StatusCode.FORBIDDEN, "No permission.", ex.getMessage());
     }
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    Result handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return new Result(false, StatusCode.NOT_FOUND, "This API endpoint is not found.", ex.getMessage());
-    }
-
-    @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
-    ResponseEntity<Result> handleRestClientException(HttpStatusCodeException ex) throws JsonProcessingException {
-
-        String exceptionMessage = ex.getMessage();
-
-        // Replace <EOL> with actual newlines.
-        exceptionMessage = exceptionMessage.replace("<EOL>", "\n");
-
-        // Extract the JSON part from the string.
-        String jsonPart = exceptionMessage.substring(exceptionMessage.indexOf("{"), exceptionMessage.lastIndexOf("}") + 1);
-
-        // Create an ObjectMapper instance.
-        ObjectMapper mapper = new ObjectMapper();
-
-        // Parse the JSON string to a JsonNode.
-        JsonNode rootNode = mapper.readTree(jsonPart);
-
-        // Extract the message.
-        String formattedExceptionMessage = rootNode.path("error").path("message").asText();
-
-        return new ResponseEntity<>(
-                new Result(false,
-                        ex.getStatusCode().value(),
-                        "A rest client error occurs, see data for details.",
-                        formattedExceptionMessage),
-                ex.getStatusCode());
-    }
-
     /**
      * Fallback handles any unhandled exceptions.
      *

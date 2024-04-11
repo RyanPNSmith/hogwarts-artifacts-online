@@ -38,12 +38,3 @@ management:
   tracing:
     sampling:
       probability: 1 # Only for demo purpose, change it back to 0.1 in production.
-info:
-  app:
-    name: hogwarts-artifacts-online
-    description: A web application that manages artifacts and wizards for Hogwarts School of Witchcraft and Wizardry.
-    version: @project.version@
-    author: Bingyang Wei
-    links:
-      youtube: https://youtube.com/@BingyangWei
-      github: https://github.com/Washingtonwei/hogwarts-artifacts-online
