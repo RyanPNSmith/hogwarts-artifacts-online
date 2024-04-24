@@ -1,3 +1,4 @@
+
 package edu.tcu.cs.hogwartsartifactsonline.artifact.converter;
 
 import edu.tcu.cs.hogwartsartifactsonline.artifact.Artifact;
@@ -18,14 +19,13 @@ public class ArtifactToArtifactDtoConverter implements Converter<Artifact, Artif
     @Override
     public ArtifactDto convert(Artifact source) {
         ArtifactDto artifactDto = new ArtifactDto(source.getId(),
-                                                source.getName(),
-                                                source.getDescription(),
-                                                source.getImageURL(),
-                                                source.getOwner() != null
-                                                        ? this.wizardToWizardDtoConverter.convert(source.getOwner())
-                                                        :null);
+                source.getName(),
+                source.getDescription(),
+                source.getImageUrl(),
+                source.getOwner() != null
+                        ? this.wizardToWizardDtoConverter.convert(source.getOwner())
+                        : null);
         return artifactDto;
-
     }
 
 }

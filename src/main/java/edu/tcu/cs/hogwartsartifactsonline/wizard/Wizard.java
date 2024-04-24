@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-
 public class Wizard implements Serializable {
 
     @Id
@@ -51,8 +50,6 @@ public class Wizard implements Serializable {
     public void addArtifact(Artifact artifact) {
         artifact.setOwner(this);
         this.artifacts.add(artifact);
-
-
     }
 
     public Integer getNumberOfArtifacts() {

@@ -89,7 +89,8 @@ public class SecurityConfiguration {
                 /* Configures the spring boot application as an OAuth2 Resource Server which authenticates all
                  the incoming requests (except the ones excluded above) using JWT authentication.
                  */
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
@@ -114,9 +115,16 @@ public class SecurityConfiguration {
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
-
+        /*
+        Let’s say that that your authorization server communicates authorities in a custom claim called "authorities".
+        In that case, you can configure the claim that JwtAuthenticationConverter should inspect, like so:
+         */
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-        
+
+        /*
+        You can also configure the authority prefix to be different as well. The default one is "SCOPE_".
+        In this project, you need to change it to empty, that is, no prefix!
+         */
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();

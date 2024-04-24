@@ -38,6 +38,7 @@ class ArtifactServiceTest {
     @Mock
     IdWorker idWorker;
 
+
     @InjectMocks // The Mockito mock objects for ArtifactRepository and IdWorker will be injected into artifactService.
     ArtifactService artifactService;
 
@@ -50,12 +51,14 @@ class ArtifactServiceTest {
         a1.setId("1250808601744904191");
         a1.setName("Deluminator");
         a1.setDescription("A Deluminator is a device invented by Albus Dumbledore that resembles a cigarette lighter. It is used to remove or absorb (as well as return) the light from any light source to provide cover to the user.");
-
+        a1.setImageUrl("imageUrl");
 
         Artifact a2 = new Artifact();
         a2.setId("1250808601744904192");
         a2.setName("Invisibility Cloak");
         a2.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a2.setImageUrl("imageUrl");
+
         this.artifacts = new ArrayList<>();
         this.artifacts.add(a1);
         this.artifacts.add(a2);
@@ -78,6 +81,7 @@ class ArtifactServiceTest {
         a.setId("1250808601744904192");
         a.setName("Invisibility Cloak");
         a.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a.setImageUrl("ImageUrl");
 
         Wizard w = new Wizard();
         w.setId(2);
@@ -94,7 +98,7 @@ class ArtifactServiceTest {
         assertThat(returnedArtifact.getId()).isEqualTo(a.getId());
         assertThat(returnedArtifact.getName()).isEqualTo(a.getName());
         assertThat(returnedArtifact.getDescription()).isEqualTo(a.getDescription());
-
+        assertThat(returnedArtifact.getImageUrl()).isEqualTo(a.getImageUrl());
         assertThat(returnedArtifact.getOwner()).isNotNull();
 
         // Verify artifactRepository.findById() is called exactly once with "1250808601744904192".
@@ -137,7 +141,7 @@ class ArtifactServiceTest {
         Artifact newArtifact = new Artifact();
         newArtifact.setName("Artifact 3");
         newArtifact.setDescription("Description...");
-
+        newArtifact.setImageUrl("ImageUrl...");
 
         given(this.idWorker.nextId()).willReturn(123456L);
         given(this.artifactRepository.save(newArtifact)).willReturn(newArtifact);
@@ -149,6 +153,7 @@ class ArtifactServiceTest {
         assertThat(savedArtifact.getId()).isEqualTo("123456");
         assertThat(savedArtifact.getName()).isEqualTo(newArtifact.getName());
         assertThat(savedArtifact.getDescription()).isEqualTo(newArtifact.getDescription());
+        assertThat(savedArtifact.getImageUrl()).isEqualTo(newArtifact.getImageUrl());
         verify(this.artifactRepository, times(1)).save(newArtifact);
     }
 
@@ -159,13 +164,13 @@ class ArtifactServiceTest {
         oldArtifact.setId("1250808601744904192");
         oldArtifact.setName("Invisibility Cloak");
         oldArtifact.setDescription("An invisibility cloak is used to make the wearer invisible.");
-
+        oldArtifact.setImageUrl("ImageUrl");
 
         Artifact update = new Artifact();
         // update.setId("1250808601744904192");
         update.setName("Invisibility Cloak");
         update.setDescription("A new description.");
-
+        update.setImageUrl("ImageUrl");
 
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(oldArtifact));
         given(this.artifactRepository.save(oldArtifact)).willReturn(oldArtifact);
@@ -186,7 +191,7 @@ class ArtifactServiceTest {
         Artifact update = new Artifact();
         update.setName("Invisibility Cloak");
         update.setDescription("A new description.");
-
+        update.setImageUrl("ImageUrl");
 
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
 
@@ -206,7 +211,7 @@ class ArtifactServiceTest {
         artifact.setId("1250808601744904192");
         artifact.setName("Invisibility Cloak");
         artifact.setDescription("An invisibility cloak is used to make the wearer invisible.");
-
+        artifact.setImageUrl("ImageUrl");
 
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(artifact));
         doNothing().when(this.artifactRepository).deleteById("1250808601744904192");
@@ -243,6 +248,8 @@ class ArtifactServiceTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonArray = objectMapper.writeValueAsString(artifactDtos);
+
+
     }
 
 }
