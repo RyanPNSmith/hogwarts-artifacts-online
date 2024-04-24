@@ -44,6 +44,14 @@ public class ArtifactController {
         return new Result(true, StatusCode.SUCCESS, "Find One Success", artifactDto);
     }
 
+    @GetMapping
+    public Result findAllArtifacts(Pageable pageable) {
+        Page<Artifact> artifactPage = this.artifactService.findAll(pageable);
+        // Convert artifactPage to a page of artifactDtos
+        Page<ArtifactDto> artifactDtoPage = artifactPage
+                .map(this.artifactToArtifactDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", artifactDtoPage);
+    }
 
     @PostMapping
     public Result addArtifact(@Valid @RequestBody ArtifactDto artifactDto) {

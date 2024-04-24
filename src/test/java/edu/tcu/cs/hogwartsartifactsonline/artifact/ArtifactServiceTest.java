@@ -4,6 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.dto.ArtifactDto;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.utils.IdWorker;
+import edu.tcu.cs.hogwartsartifactsonline.client.ai.chat.ChatClient;
+import edu.tcu.cs.hogwartsartifactsonline.client.ai.chat.dto.ChatRequest;
+import edu.tcu.cs.hogwartsartifactsonline.client.ai.chat.dto.ChatResponse;
+import edu.tcu.cs.hogwartsartifactsonline.client.ai.chat.dto.Choice;
+import edu.tcu.cs.hogwartsartifactsonline.client.ai.chat.dto.Message;
 import edu.tcu.cs.hogwartsartifactsonline.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.dto.WizardDto;
@@ -38,6 +43,8 @@ class ArtifactServiceTest {
     @Mock
     IdWorker idWorker;
 
+    @Mock
+    ChatClient chatClient;
 
     @InjectMocks // The Mockito mock objects for ArtifactRepository and IdWorker will be injected into artifactService.
     ArtifactService artifactService;
@@ -249,7 +256,24 @@ class ArtifactServiceTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonArray = objectMapper.writeValueAsString(artifactDtos);
 
+        List<Message> messages = List.of(
+                new Message("system", "Your task is to generate a short summary of a given JSON array in at most 100 words. The summary must include the number of artifacts, each artifact's description, and the ownership information. Don't mention that the summary is from a given JSON array."),
+                new Message("user", jsonArray)
+        );
 
+        ChatRequest chatRequest = new ChatRequest("gpt-4", messages);
+
+        ChatResponse chatResponse = new ChatResponse(List.of(
+                new Choice(0, new Message("assistant", "A summary of two artifacts owned by Albus Dumbledore."))));
+
+        given(this.chatClient.generate(chatRequest)).willReturn(chatResponse);
+
+        // When:
+        String summary = this.artifactService.summarize(artifactDtos);
+
+        // Then:
+        assertThat(summary).isEqualTo("A summary of two artifacts owned by Albus Dumbledore.");
+        verify(this.chatClient, times(1)).generate(chatRequest);
     }
 
 }
